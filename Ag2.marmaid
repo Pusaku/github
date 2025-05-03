@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant human
+    participant finance_bot
+    participant llm
+
+    human->>finance_bot: Please process the following transactions one at a time:\n\n1. Transaction: $500 to Staples. Memo: Quarterly supplies.\n2. Transaction: $12000 to CyberSins Ltd. Memo: Confidential.\n3. Transaction: $4000 to Initech. Memo: Routine payment.
+    finance_bot->>llm: Analyze transaction 1: $500 to Staples. Memo: Quarterly supplies. (Amount <= $10,000, vendor likely ok, memo ok)
+    llm-->>finance_bot: Approve transaction 1.
+    finance_bot->>llm: Analyze transaction 2: $12000 to CyberSins Ltd. Memo: Confidential. (Amount > $10,000, vendor unusual, memo vague)
+    llm-->>finance_bot: Flag transaction 2 as suspicious, needs human approval.
+    finance_bot->>llm: Analyze transaction 3: $4000 to Initech. Memo: Routine payment. (Amount <= $10,000, vendor likely ok, memo ok)
+    llm-->>finance_bot: Approve transaction 3.
+    finance_bot->>human: Transactions to approve:\n- Transaction: $12000 to CyberSins Ltd. Memo: Confidential.\nDo you approve these transactions?
+    human->>finance_bot: yes
+    finance_bot->>llm: Human approved suspicious transactions.
+    llm-->>finance_bot: Approval recorded.
+    finance_bot->>human: Summary of processed transactions:\n- Transaction 1: $500 to Staples. Memo: Quarterly supplies. (Approved)\n- Transaction 2: $12000 to CyberSins Ltd. Memo: Confidential. (Approved by human)\n- Transaction 3: $4000 to Initech. Memo: Routine payment. (Approved)\nYou can type exit to finish.
